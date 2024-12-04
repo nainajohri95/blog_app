@@ -129,7 +129,7 @@ const HomePage = () => {
       </main>
 
       {/* Footer Section */}
-      <footer className="bg-white border-t mt-20">
+      <footer className="bg-white border-t ">
         <div className="container mx-auto px-4 py-12">
           <div className="text-center">
             <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
