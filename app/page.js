@@ -1,5 +1,10 @@
+"use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../firebase/firebaseConfig";
+import { FcGoogle } from "react-icons/fc";
+
 import {
   Card,
   CardHeader,
@@ -8,8 +13,19 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Pen, Share2, Compass } from "lucide-react";
+import Link from "next/link";
 
 const HomePage = () => {
+  //function handleGoogle
+  const handleGoogle = async (e) => {
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error("Error during Google sign-in:", error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       {/* Nav Bar Section */}
@@ -22,14 +38,12 @@ const HomePage = () => {
             <img
               src="/pen.svg"
               alt="BlogSpace Logo"
-              className="w-8 h-8 object-contain"
+              className="w-6 h-6 object-contain"
             />
             <div className="flex gap-4 ml-auto">
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white  ">
-                Login
-              </Button>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                Sign Up
+              <Button variant="outline" onClick={handleGoogle}>
+                <FcGoogle className="text-xl" />
+                Continue with Google
               </Button>
             </div>
           </div>
@@ -57,11 +71,11 @@ const HomePage = () => {
               </Button>
 
               <Button className="bg-blue-600 hover:bg-blue-700 text-white text-lg py-6 px-8">
-                Explore Blogs
+                <Link href="/blog">Explore Blogs</Link>
               </Button>
             </div>
           </div>
-          <div className="flex-shrink-0 w-full md:w-1/2">
+          <div className="flex-shrink-0 w-full md:w-[30%]">
             <img
               src="/img.jpeg"
               alt="BlogSpace Community"
