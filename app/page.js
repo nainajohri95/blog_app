@@ -1,8 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 import useAuthStore from "../store/authStore";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -19,28 +24,52 @@ import { Pen, Share2, Compass } from "lucide-react";
 import Link from "next/link";
 
 const HomePage = () => {
-  const { user, setUser, clearUser } = useAuthStore(); // Zustand store for auth state
+  const router = useRouter();
+  const { user, setUser, clearUser } = useAuthStore();
 
-  // fun to continue with google
   const handleGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
       const userData = result.user;
 
-      // Update Zustand store with user data
       setUser({
         name: userData.displayName,
         avatar: userData.photoURL,
       });
+
+      router.push("/home");
     } catch (error) {
       console.error("Error during Google login:", error.message);
     }
   };
 
+  const handleStartWriting = () => {
+    if (user) {
+      router.push("/home");
+    } else {
+      // Optional: You can trigger the Google sign-in directly
+      handleGoogle();
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (userData) => {
+      if (userData) {
+        setUser({
+          name: userData.displayName,
+          avatar: userData.photoURL,
+        });
+      } else {
+        clearUser();
+      }
+    });
+
+    return () => unsubscribe();
+  }, [setUser, clearUser]);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* Navigation Bar */}
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b">
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center w-full">
@@ -58,7 +87,10 @@ const HomePage = () => {
                   <Button
                     variant="outline"
                     className="text-red-600 border-red-600 hover:bg-red-600 hover:text-white"
-                    onClick={clearUser} 
+                    onClick={() => {
+                      auth.signOut();
+                      clearUser();
+                    }}
                   >
                     Logout
                   </Button>
@@ -74,7 +106,6 @@ const HomePage = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <main className="container mx-auto px-4">
         <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-12 py-16">
           <div className="flex-1 space-y-6 text-center md:text-left">
@@ -86,7 +117,10 @@ const HomePage = () => {
               growing community of writers and readers.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white text-lg py-6 px-8">
+              <Button
+                className="bg-blue-600 hover:bg-blue-700 text-white text-lg py-6 px-8"
+                onClick={handleStartWriting}
+              >
                 Start Writing
               </Button>
               <Button className="bg-blue-600 hover:bg-blue-700 text-white text-lg py-6 px-8">
@@ -103,7 +137,6 @@ const HomePage = () => {
           </div>
         </div>
 
-        {/* Cards Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto py-16">
           <Card className="group bg-white/50 backdrop-blur-sm border-2 hover:border-blue-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
             <CardHeader className="space-y-4">
