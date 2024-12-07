@@ -1,12 +1,14 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { db } from "@/firebase/firebaseConfig";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { Calendar, Clock, User, ChevronLeft } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { use } from "react";
 
 const SingleBlog = ({ params }) => {
+  const { id } = use(params); // Resolve the `params` promise.
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,7 +16,6 @@ const SingleBlog = ({ params }) => {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const { id } = params;
         const q = query(collection(db, "blogs"), where("id", "==", id));
         const querySnapshot = await getDocs(q);
 
@@ -34,7 +35,7 @@ const SingleBlog = ({ params }) => {
     };
 
     fetchBlog();
-  }, [params]);
+  }, [id]);
 
   if (loading) {
     return (
@@ -48,25 +49,6 @@ const SingleBlog = ({ params }) => {
     );
   }
 
-  // if (error) {
-  //   return (
-  //     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50 flex items-center justify-center">
-  //       <Card className="p-8 max-w-md text-center">
-  //         <div className="text-red-500 text-xl mb-4">😕</div>
-  //         <div className="text-xl text-red-600 font-medium mb-4">{error}</div>
-  //         <button
-  //           onClick={() => window.history.back()}
-  //           className="text-purple-600 hover:text-purple-700 inline-flex items-center"
-  //         >
-  //           <ChevronLeft className="w-4 h-4 mr-2" />
-  //           Go Back
-  //         </button>
-  //       </Card>
-  //     </div>
-  //   );
-  // }
-
-  // if user try to view blog with wrong blog id (i.e blog don't exist)
   if (!blog) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50 flex items-center justify-center">
@@ -99,23 +81,12 @@ const SingleBlog = ({ params }) => {
           Back to Articles
         </button>
 
-        {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-purple-600 to-purple-800 rounded-2xl overflow-hidden mb-8 p-8">
-          <div className="absolute top-4 right-4">
-            <span className="px-4 py-2 bg-white rounded-full text-sm font-medium text-purple-600 shadow-sm">
-              {blog.category}
-            </span>
-          </div>
-        </div>
-
-        {/* Content Section */}
+        {/* Content */}
         <Card className="p-8 shadow-xl">
-          {/* Header */}
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-gray-900 mb-6 leading-tight">
               {blog.title}
             </h1>
-
             <div className="flex flex-wrap items-center gap-6 text-gray-600">
               <div className="flex items-center gap-2 bg-gray-50 px-3 py-1 rounded-full">
                 <User className="w-4 h-4 text-purple-600" />
@@ -127,14 +98,10 @@ const SingleBlog = ({ params }) => {
                   {blog.createdAt?.toDate().toLocaleDateString() || "No date"}
                 </span>
               </div>
-              <div className="flex items-center gap-2 bg-gray-50 px-3 py-1 rounded-full">
-                <Clock className="w-4 h-4 text-purple-600" />
-                <span>{"5 min read"}</span>
-              </div>
+              {blog.category}
             </div>
           </div>
 
-          {/* Description */}
           <div className="prose prose-purple max-w-none mb-8">
             <p className="text-xl text-gray-600 leading-relaxed border-l-4 border-purple-200 pl-4 italic">
               {blog.description}
