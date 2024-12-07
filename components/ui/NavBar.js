@@ -6,6 +6,7 @@ import useAuthStore from "../../store/authStore";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FcGoogle } from "react-icons/fc";
+import Image from "next/image";
 
 const Navbar = () => {
   const { user, clearUser } = useAuthStore();
@@ -22,13 +23,13 @@ const Navbar = () => {
           <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             BlogSpace
           </h1>
-          <img src="/pen.svg" alt="logo" className="w-8 h-8" />
+          <Image src="/pen.svg" alt="logo" width={24} height={24} />
           <div className="flex gap-4 ml-auto">
             {user ? (
               <div className="flex items-center gap-4">
                 <Avatar>
-                  <AvatarImage src={user.avatar} alt="User Avatar" />
-                  <AvatarFallback>{user.name[0]}</AvatarFallback>
+                  <AvatarImage src={user?.avatar} alt="User Avatar" />
+                  <AvatarFallback>{user?.name[0]}</AvatarFallback>
                 </Avatar>
                 <span className="text-gray-700 font-medium">{user.name}</span>
                 <Button

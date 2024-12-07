@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/card";
 import { Pen, Share2, Compass } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const HomePage = () => {
   const router = useRouter();
@@ -92,7 +93,9 @@ const HomePage = () => {
             </div>
           </div>
           <div className="flex-shrink-0 w-full md:w-[30%]">
-            <img
+            <Image
+              width={300}
+              height={300}
               src="/img.jpeg"
               alt="BlogSpace Community"
               className="w-full h-auto rounded-2xl shadow-2xl transform"
