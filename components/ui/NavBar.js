@@ -2,6 +2,7 @@
 
 import React from "react";
 import { auth } from "../../firebase/firebaseConfig";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import useAuthStore from "../../store/authStore";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -9,7 +10,32 @@ import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
 
 const Navbar = () => {
-  const { user, clearUser } = useAuthStore();
+  const { user, setUser, clearUser } = useAuthStore();
+
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+      const user = result.user;
+
+      // Update the user state in your store
+      setUser({
+        uid: user.uid,
+        name: user.displayName,
+        email: user.email,
+        avatar: user.photoURL,
+        token,
+      });
+
+      console.log("User signed in:", user);
+    } catch (error) {
+      console.error("Error during Google Sign-In:", error.message);
+      alert("Google Sign-In failed. Please try again.");
+    }
+  };
 
   const handleLogout = () => {
     auth.signOut();
@@ -41,7 +67,7 @@ const Navbar = () => {
                 </Button>
               </div>
             ) : (
-              <Button variant="outline">
+              <Button variant="outline" onClick={handleGoogleSignIn}>
                 <FcGoogle className="text-xl mr-2" />
                 Continue with Google
               </Button>
