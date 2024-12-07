@@ -48,7 +48,6 @@ const HomePage = () => {
     if (user) {
       router.push("/home");
     } else {
-      // Optional: You can trigger the Google sign-in directly
       handleGoogle();
     }
   };
@@ -70,42 +69,6 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center w-full">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              BlogSpace
-            </h1>
-            <div className="flex gap-4 ml-auto">
-              {user ? (
-                <div className="flex items-center gap-4">
-                  <Avatar>
-                    <AvatarImage src={user.avatar} alt="User Avatar" />
-                    <AvatarFallback>{user.name[0]}</AvatarFallback>
-                  </Avatar>
-                  <span className="text-gray-700 font-medium">{user.name}</span>
-                  <Button
-                    variant="outline"
-                    className="text-red-600 border-red-600 hover:bg-red-600 hover:text-white"
-                    onClick={() => {
-                      auth.signOut();
-                      clearUser();
-                    }}
-                  >
-                    Logout
-                  </Button>
-                </div>
-              ) : (
-                <Button variant="outline" onClick={handleGoogle}>
-                  <FcGoogle className="text-xl mr-2" />
-                  Continue with Google
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
-
       <main className="container mx-auto px-4">
         <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-12 py-16">
           <div className="flex-1 space-y-6 text-center md:text-left">

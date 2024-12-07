@@ -74,7 +74,7 @@ const HomePage = () => {
       const blogData = {
         ...formData,
         id: v4(),
-        author: currentUser.displayName || currentUser.email, // Fetch username or fallback to email
+        author: currentUser.displayName || currentUser.email, 
         createdAt: serverTimestamp(),
       };
 
@@ -184,24 +184,7 @@ const HomePage = () => {
               )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Upload Cover Image
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="w-full p-2 border rounded-md"
-              />
-              {formData.coverImage && (
-                <img
-                  src={formData.coverImage}
-                  alt="Cover"
-                  className="mt-2 w-32 h-32 object-cover rounded-md"
-                />
-              )}
-            </div>
+            
 
             <div>
               <Input

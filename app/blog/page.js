@@ -13,7 +13,7 @@ const BlogPage = () => {
       try {
         const querySnapshot = await getDocs(collection(db, "blogs"));
         const blogList = querySnapshot.docs.map((doc) => ({
-          // id: doc.id,
+          id: doc.id,
           ...doc.data(),
         }));
         setBlogs(blogList);
@@ -39,21 +39,6 @@ const BlogPage = () => {
               key={blog.id}
               className="overflow-hidden hover:shadow-lg transition-shadow"
             >
-              <div className="relative h-48 bg-gradient-to-r from-purple-400 to-pink-500">
-                {blog.coverImage && (
-                  <img
-                    src={blog.coverImage}
-                    alt={blog.title}
-                    className="w-full h-full object-cover"
-                  />
-                )}
-                <div className="absolute top-3 right-3">
-                  <span className="px-3 py-1 bg-white/90 rounded-full text-sm text-purple-600">
-                    {blog.category}
-                  </span>
-                </div>
-              </div>
-
               <div className="p-5">
                 <h2 className="text-xl font-semibold text-gray-800 mb-2">
                   {blog.title}
@@ -75,7 +60,12 @@ const BlogPage = () => {
                     {blog.createdAt?.toDate().toLocaleDateString() || "No date"}
                   </span>
 
-                  <Link href={`blog/${blog?.id}`}>View</Link>
+                  <Link
+                    href={`blog/${blog?.id}`}
+                    className="text-purple-600 text-sm font-medium hover:bg-purple-100 hover:text-purple-800 transition px-4 py-2 rounded"
+                  >
+                    View
+                  </Link>
                 </div>
               </div>
             </Card>
